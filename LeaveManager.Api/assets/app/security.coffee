@@ -25,7 +25,11 @@ angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config',
 		]
 ]
 
-.factory 'httpAuthInterceptors', ['ReturnUrlService', '$q', 'AppConfig', (ReturnUrlService, $q, AppConfig) ->
+.factory 'httpAuthInterceptors', ['ReturnUrlService', '$q', 'AppConfig', 'AuthDataStorage', (ReturnUrlService, $q, AppConfig, AuthDataStorage) ->
+	request: (config) ->
+		if config.url.indexOf(AppConfig.baseApiUrl) >=0
+			config.headers['Authorization'] = "Bearer #{AuthDataStorage.getToken()}"
+		config
 	responseError: (rejection) ->
 		switch rejection.status
 			when 401, 403
@@ -69,6 +73,8 @@ angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config',
 		set: (token, userName) =>
 			authData = _.extend @_get() ? {}, token: token, userName: userName
 			localStorageService.add AppConfig.authDataKey, authData
+
+		getToken: => @_get()?.token
 
 		remove: => localStorageService.remove AppConfig.authDataKey
 

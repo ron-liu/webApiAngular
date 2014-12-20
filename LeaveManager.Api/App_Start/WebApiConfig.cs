@@ -45,8 +45,8 @@ namespace LeaveManager.Api
 
 			var exception = context.Exception as ApiException;
 			var ret = new ApiModel();
-			if (exception == null) ret.Messages.Add(new Message { Content = context.Exception.Message, MessageType = Message.Type.Error });
-			else ret.Messages.AddRange(exception.ErrorStrings.Select(x => new Message { Content = x, MessageType = Message.Type.Error }));
+			if (exception == null) ret.Messages.Add(new Notification { Content = context.Exception.Message, MessageType = Notification.Type.Error });
+			else ret.Messages.AddRange(exception.ErrorStrings.Select(x => new Notification { Content = x, MessageType = Notification.Type.Error }));
 
 			context.Result = new NegotiatedContentResult<ApiModel>(exception != null ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, ret, negotiator, context.Request, formatters);
 			base.Handle(context);
@@ -55,11 +55,11 @@ namespace LeaveManager.Api
 
 	public class ApiModel
 	{
-		public List<Message> Messages { get; set; }
+		public List<Notification> Messages { get; set; }
 
 		public ApiModel()
 		{
-			Messages = new List<Message>();
+			Messages = new List<Notification>();
 		}
 	}
 
@@ -68,7 +68,7 @@ namespace LeaveManager.Api
 		public TContent Content { get; set; }
 	}
 
-	public class Message
+	public class Notification
 	{
 		public string Content { get; set; }
 		public Type MessageType { get; set; }

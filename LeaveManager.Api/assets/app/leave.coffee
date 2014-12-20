@@ -15,10 +15,18 @@ angular.module 'app.leave', ['ui.router']
 	.state 'home.list',
 		url: 'list'
 		templateUrl: 'app/list.html'
-		controller: [->]
+		controller: [->
+
+		]
+		resolve:
+			leaves: ['LeaveService', (LeaveService) -> LeaveService.list() ]
 
 	.state 'home.approve',
 		url: 'approve'
 		templateUrl: 'app/approve.html'
 		controller: [->]
+]
+
+.factory 'LeaveService', [ 'Restangular', (Restangular)->
+	list: ->Restangular.all('list').getList()
 ]

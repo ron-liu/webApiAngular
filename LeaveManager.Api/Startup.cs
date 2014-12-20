@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using System.Web.Http;
+using LeaveManager.Api.Core;
+using LeaveManager.Api.Query;
 using Microsoft.Owin;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
+using NEventStore;
+using NEventStore.Dispatcher;
+using NEventStore.Persistence;
+using NEventStore.Persistence.Sql.SqlDialects;
+using Ninject;
+using Ninject.Web.Common.OwinHost;
+using Ninject.Web.WebApi.OwinHost;
 using Owin;
 
 [assembly: OwinStartup(typeof(LeaveManager.Api.Startup))]
@@ -22,7 +28,32 @@ namespace LeaveManager.Api
 			ConfigureOAuth(app);
 
 			WebApiConfig.Register(config);
-			app.UseWebApi(config);
+			app.UseNinjectMiddleware(CreateKernel).UseNinjectWebApi(config);
+		}
+
+		private static StandardKernel CreateKernel()
+		{
+			var kernel = new StandardKernel(new NinjectSettings { InjectParentPrivateProperties = true, InjectNonPublic = true});
+			kernel.Bind<IQueryHandler<ListLeavesByUserName, IEnumerable<Leave>>>()
+				.To<ListLeavesByUserNameQueryHandler>();
+
+			kernel.Bind<IStoreEvents>().ToMethod(x => Wireup.Init()
+				.UsingSqlPersistence("EventStore")
+				.WithDialect(new MsSqlDialect())
+				.InitializeStorageEngine()
+				.UsingJsonSerialization()
+				.UsingSynchronousDispatchScheduler()
+				.DispatchTo(new FakeBusDispatcher())
+				.Build()).InSingletonScope();
+
+			kernel.Bind<IEventPublisher, ICommandSender>().To<FakeBus>().InSingletonScope();
+
+			return kernel;
+		}
+
+		private static void DispatchCommit(ICommit commit)
+		{
+			
 		}
 
 		public void ConfigureOAuth(IAppBuilder app)
