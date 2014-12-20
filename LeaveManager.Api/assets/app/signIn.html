@@ -1,0 +1,25 @@
+<div class="security-box">
+<h1>Sign in</h1>
+<form novalidate submit-valid="submit(model)" name="form">
+	<div class="whole">
+		<div class="form-group" >
+			<input type="email" class="form-control" placeholder="Email Address" ng-model="model.Email" name="email" required/>
+			<div class="error-messages" ng-if="form.attempted" ng-messages="form.email.$error" ng-messages-include="form-messages"></div>
+		</div>
+
+		<div class="form-group">
+			<input type="password" class="form-control" placeholder="Password" ng-model="model.Password" name="password" required/>
+			<div class="error-messages" ng-if="form.attempted" ng-messages="form.password.$error" ng-messages-include="form-messages"></div>
+		</div>
+
+		<div class="form-group" ng-if="setting.needForgetPassword">
+			<a href="javascript:" ui-sref="home.forgotPassword" class="pull-right">Forgot Password</a>
+		</div>
+
+		<div class="form-group" >
+			<button type="submit" ng-disabled="form.loading" class="btn btn-primary btn-lg" >Signin</button>
+			<a type="button" class="pull-right" ui-sref="home.signUp">Not a member?</a>
+		</div>
+	</div>
+</form>
+</div>

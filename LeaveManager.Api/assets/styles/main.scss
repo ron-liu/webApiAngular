@@ -1,0 +1,64 @@
+@import "../lib/bootstrap-sass-official/assets/stylesheets/bootstrap";
+
+// for form
+form {
+	.columns .form-group {
+		@extend .col-sm-4;
+	}
+	.whole .form-group {
+		@extend .col-sm-12;
+	}
+}
+
+// for form validation
+html, body {
+	position:relative;
+}
+.main-form {
+	position:absolute;
+	right:0;
+	top:0;
+	background:white;
+	width:500px;
+	z-index:100;
+	padding:20px;
+	border-left:2px solid black;
+	min-height:100%;
+}
+
+.control-group {
+	margin-bottom:20px;
+}
+.error-messages.ng-active {
+	background:maroon;
+	color:white;
+	padding:5px;
+	border-radius:5px;
+	margin-top:15px;
+	position:relative;
+}
+.error-messages.ng-active:after {
+	position:absolute;
+	top:-10px;
+	content:"";
+	left:20px;
+	border-style:solid;
+	border-color:transparent transparent maroon;
+	border-width:5px;
+}
+
+// for notification
+div.notification {
+	@extend .row;
+	div.alert {
+		@extend .col-sm-6;
+		@extend .col-sm-offset-3;
+	}
+}
+
+.security-box {
+	@extend .col-sm-6;
+	@extend .col-sm-offset-3;
+	border: 1px solid lightgray;
+	padding: 4px;
+}

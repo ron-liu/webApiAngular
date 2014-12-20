@@ -1,0 +1,33 @@
+<div class="security-box">
+<h1>Sign up</h1>
+<form name="form" novalidate submit-valid="submit(model)">
+	<div class="whole">
+		<div class="form-group">
+			<input type="email" class="form-control" placeholder="Email Address" ng-model="model.UserName" name="userName" required/>
+			<div class="error-messages" ng-if="form.attempted" ng-messages="form.userName.$error" ng-messages-include="form-messages"></div>
+		</div>
+
+		<div class="form-group">
+			<input type="password" class="form-control" placeholder="Password" ng-model="model.Password" name="password" required/>
+			<div class="error-messages" ng-if="form.attempted" ng-messages="form.password.$error" ng-messages-include="form-messages"></div>
+		</div>
+		<div class="form-group">
+			<input type="password" class="form-control" placeholder="Confirm Password" ng-model="model.ConfirmPassword" name="confirmPassword" required/>
+			<div class="error-messages" ng-if="form.attempted" ng-messages="form.confirmPassword.$error" ng-messages-include="form-messages"></div>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Your Name" ng-model="model.Name" name="name" required />
+			<div class="error-messages" ng-if="form.attempted" ng-messages="form.name.$error" ng-messages-include="form-messages"></div>
+		</div>
+
+		<div class="form-group" ng-if="setting.needForgetPassword">
+			<a href="javascript:" ui-sref="home.forgotPassword" class="pull-right">Forgot Password</a>
+		</div>
+
+		<div class="form-group" >
+			<button type="submit" ng-disabled="form.loading" class="btn btn-primary btn-lg" >Sign up</button>
+			<a type="button" class="pull-right" ui-sref="home.signIn">Already a member?</a>
+		</div>
+	</div>
+</form>
+</div>
