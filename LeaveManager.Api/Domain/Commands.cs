@@ -1,15 +1,11 @@
 ﻿using System;
+using LeaveManager.Api.Infrastructure;
 
-namespace LeaveManager.Api.Core
+namespace LeaveManager.Api.Domain
 {
-	public class Event : IMessage
+	public class ApplyLeaveCommand : ICommand
 	{
-		public Guid SourceId { get; set; }
-		public int Version { get; set; }
-	}
-
-	public class LeaveApplied : Event
-	{
+		public Guid LeaveId { get; set; }
 		public string UserName { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
@@ -18,12 +14,12 @@ namespace LeaveManager.Api.Core
 		public DateTime HappenedOn { get; set; }
 	}
 
-	public class LeaveEvaluated : Event
+	public class EvaluateLeaveCommand : ICommand
 	{
+		public Guid LeaveId { get; set; }
 		public string UserName { get; set; }
 		public string Comment { get; set; }
 		public DateTime HappenedOn { get; set; }
 		public bool IsApproved { get; set; }
 	}
-
 }

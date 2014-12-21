@@ -150,20 +150,20 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AuthContext.cs" />
     <Compile Include="AuthRepository.cs" />
-    <Compile Include="Command\ICommand.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\LeaveController.cs" />
-    <Compile Include="Core\Commands.cs" />
-    <Compile Include="Core\Events.cs" />
-    <Compile Include="Core\EventSourced.cs" />
-    <Compile Include="Core\EventStore.cs" />
-    <Compile Include="Core\FakeBus.cs" />
-    <Compile Include="Core\IMessage.cs" />
-    <Compile Include="Core\Util.cs" />
+    <Compile Include="Domain\Commands.cs" />
+    <Compile Include="Domain\Events.cs" />
+    <Compile Include="Domain\Leave.cs" />
+    <Compile Include="Domain\LeaveCommandHandler.cs" />
+    <Compile Include="Infrastructure\EventSourcedAggregate.cs" />
+    <Compile Include="Infrastructure\EventSteamRepository.cs" />
+    <Compile Include="Infrastructure\FakeBus.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\FakeBusDispatcher.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\IQuery.cs" />

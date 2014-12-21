@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using LeaveManager.Api.Core;
+using LeaveManager.Api.Domain;
+using LeaveManager.Api.Infrastructure;
 
 namespace LeaveManager.Api.Query
 {

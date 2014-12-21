@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Web.Http;
-using LeaveManager.Api.Core;
+using LeaveManager.Api.Domain;
+using LeaveManager.Api.Infrastructure;
 using LeaveManager.Api.Query;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
@@ -34,8 +35,11 @@ namespace LeaveManager.Api
 		private static StandardKernel CreateKernel()
 		{
 			var kernel = new StandardKernel(new NinjectSettings { InjectParentPrivateProperties = true, InjectNonPublic = true});
+
 			kernel.Bind<IQueryHandler<ListLeavesByUserName, IEnumerable<Leave>>>()
 				.To<ListLeavesByUserNameQueryHandler>();
+
+			kernel.Bind<IEventPublisher, ICommandSender>().To<FakeBus>().InSingletonScope();
 
 			kernel.Bind<IStoreEvents>().ToMethod(x => Wireup.Init()
 				.UsingSqlPersistence("EventStore")
@@ -43,17 +47,18 @@ namespace LeaveManager.Api
 				.InitializeStorageEngine()
 				.UsingJsonSerialization()
 				.UsingSynchronousDispatchScheduler()
-				.DispatchTo(new FakeBusDispatcher())
+				// it is not nice to use service locator due to cannot figure out how to let NEventStore to use injected stuff
+				.DispatchTo(new FakeBusDispatcher(kernel.Get<IEventPublisher>())) 
 				.Build()).InSingletonScope();
 
-			kernel.Bind<IEventPublisher, ICommandSender>().To<FakeBus>().InSingletonScope();
+			kernel.Bind(typeof(IEventSteamRepository<>)).To(typeof(EventSteamRepository<>));
+
+			// Bind all commands and events handler, those actually can be done by reflect the assembly itself.
+			// But here, I just want to do it explicitly
+			kernel.Bind<ICommandHandler<ApplyLeaveCommand>, ICommandHandler<EvaluateLeaveCommand>>().To<LeaveCommandHandler>();
+
 
 			return kernel;
-		}
-
-		private static void DispatchCommit(ICommit commit)
-		{
-			
 		}
 
 		public void ConfigureOAuth(IAppBuilder app)
