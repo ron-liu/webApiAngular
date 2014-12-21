@@ -4,21 +4,27 @@
 		<div class="form-group">
 			<label>Start Date</label>
 			<div>
-				<input type="date" class="form-control" placeholder="Start date" ng-model="model.StartDate" name="startDate" required/>
+				<input type="text" class="form-control" placeholder="Start date"
+				       datepicker-popup="{{'dd/MM/yyyy'}}" is-open="sopened" required ng-click="sopened = !sopened"
+				       ng-model="model.StartDate" name="startDate" />
 				<div class="error-messages" ng-if="form.attempted" ng-messages="form.startDate.$error" ng-messages-include="form-messages"></div>
 			</div>
 		</div>
 		<div class="form-group">
 			<label>End Date</label>
 			<div>
-				<input type="date" class="form-control" placeholder="End date" ng-model="model.EndDate" name="endDate" required/>
+				<input type="text" class="form-control" placeholder="End date"
+				       datepicker-popup="{{'dd/MM/yyyy'}}" is-open="eopened" required ng-click="eopened = !eopened"
+				       ng-model="model.EndDate" name="endDate" required gt-validator="model.StartDate"/>
 				<div class="error-messages" ng-if="form.attempted" ng-messages="form.endDate.$error" ng-messages-include="form-messages"></div>
 			</div>
 		</div>
 		<div class="form-group">
 			<label>Reason</label>
 			<div>
-				<select></select>
+				<select class="form-control" ng-model="model.Reason" ng-options="r.key as r.name for r in options.ReasonOptions" name="reason" required>
+					<option value="">--Select Reason--</option>
+				</select>
 				<div class="error-messages" ng-if="form.attempted" ng-messages="form.reason.$error" ng-messages-include="form-messages"></div>
 			</div>
 		</div>
@@ -34,7 +40,7 @@
 
 		<div class="form-group">
 			<button class="btn btn-primary" type="submit">Submit</button>
-			<button class="btn btn-warning" type="button">Cancel</button>
+			<button class="btn btn-warning" ng-click="goBack()" type="button">Cancel</button>
 		</div>
 	</div>
 

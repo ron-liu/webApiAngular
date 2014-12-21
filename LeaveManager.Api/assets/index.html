@@ -16,15 +16,15 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" ui-sref="home.dashboard">Leave Manager</a>
+			<a class="navbar-brand" ui-sref="home.dashboard">Leave Management System</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 				<li><a ui-sref="home.apply">Apply leave</a></li>
-				<li><a ui-sref="home.list">My leave list</a></li>
-				<li><a ui-sref="home.approve">Approve</a></li>
+				<li><a ui-sref="home.list">My leaves</a></li>
+				<li><a ui-sref="home.listEvaluate">Evaluate</a></li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
@@ -52,6 +52,7 @@
 <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
 <script src="lib/restangular/dist/restangular.js"></script>
 <script src="lib/lodash/dist/lodash.js"></script>
+<script src="lib/moment/moment.js"></script>
 
 <script src="app/app.js"></script>
 <script src="app/security.js"></script>
@@ -69,6 +70,8 @@
 	<div ng-message="match">This password does not match the password entered before</div>
 	<div ng-message="max">This number exceeded the maximum allowed</div>
 	<div ng-message="min">This number is below the minimum</div>
+	<div ng-message="gt">This field should be greater than the first one</div>
+	<div ng-message="lt">This field should be less than the first one</div>
 </script>
 </body>
 </html>

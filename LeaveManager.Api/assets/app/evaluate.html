@@ -1,0 +1,28 @@
+<h1>Evaluate</h1>
+
+<div ng-include class="well well-sm clearfix" src="'app/leaveInfo.html'"></div>
+
+<form name="form" class="well well-sm clearfix" novalidate submit-valid="submit(model)">
+
+	<div class="whole">
+		<div class="form-group">
+			<label>Result</label>
+			<div>
+				<input type="radio" ng-model="model.IsApproved" value="true" /> Approve
+				<input type="radio" ng-model="model.IsApproved" value="false" /> Reject
+				<input type="hidden" ng-model="model.IsApproved" required name="result" />
+				<div class="error-messages" ng-if="form.attempted" ng-messages="form.result.$error" ng-messages-include="form-messages"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Comment</label>
+			<div>
+				<textarea class="form-control" placeholder="Please type your comments" ng-model="model.Comment" name="comment" rows="5"></textarea>
+			</div>
+		</div>
+		<div class="form-group">
+			<button class="btn btn-primary" type="submit">Submit</button>
+			<button class="btn btn-warning" ng-click="goBack()" type="button">Cancel</button>
+		</div>
+	</div>
+</form>

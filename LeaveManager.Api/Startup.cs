@@ -8,8 +8,6 @@ using LeaveManager.Api.Query;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using NEventStore;
-using NEventStore.Dispatcher;
-using NEventStore.Persistence;
 using NEventStore.Persistence.Sql.SqlDialects;
 using Ninject;
 using Ninject.Web.Common.OwinHost;
@@ -36,10 +34,7 @@ namespace LeaveManager.Api
 		{
 			var kernel = new StandardKernel(new NinjectSettings { InjectParentPrivateProperties = true, InjectNonPublic = true});
 
-			kernel.Bind<IQueryHandler<ListLeavesByUserName, IEnumerable<Leave>>>()
-				.To<ListLeavesByUserNameQueryHandler>();
-
-			kernel.Bind<IEventPublisher, ICommandSender>().To<FakeBus>().InSingletonScope();
+			kernel.Bind<IEventPublisher, ICommandSender>().To<FakeBus>();
 
 			kernel.Bind<IStoreEvents>().ToMethod(x => Wireup.Init()
 				.UsingSqlPersistence("EventStore")
@@ -52,11 +47,19 @@ namespace LeaveManager.Api
 				.Build()).InSingletonScope();
 
 			kernel.Bind(typeof(IEventSteamRepository<>)).To(typeof(EventSteamRepository<>));
+			kernel.Bind<ReadModelDbContext>().ToMethod(x => new ReadModelDbContext{DbContext = "ReadModel"});
+			kernel.Bind<LeaveReadModelRepository>().ToSelf();
 
 			// Bind all commands and events handler, those actually can be done by reflect the assembly itself.
 			// But here, I just want to do it explicitly
 			kernel.Bind<ICommandHandler<ApplyLeaveCommand>, ICommandHandler<EvaluateLeaveCommand>>().To<LeaveCommandHandler>();
+			kernel.Bind<IEventHandler<LeaveApplied>, IEventHandler<LeaveEvaluated>>().To<LeaveReadModelEventHandler>();
+			kernel.Bind<IQueryHandler<ListLeavesByUserName, IEnumerable<Leave>>>().To<ListLeavesByUserNameQueryHandler>();
+			kernel.Bind<IQueryHandler<ListLeavesToEvaluate, IEnumerable<Leave>>>().To<ListLeavesToEvaluateQueryHandler>();
+			kernel.Bind<IQueryHandler<LeaveById, Leave>>().To<LeaveByIdQueryHandler>();
+			kernel.Bind<IQueryHandler<MyLeaveById, Leave>>().To<MyLeaveById.Handler>();
 
+			kernel.Get<LeaveReadModelRepository>().Init();
 
 			return kernel;
 		}
@@ -86,7 +89,8 @@ namespace LeaveManager.Api
 						}
 						var identity = new ClaimsIdentity(c.Options.AuthenticationType);
 						identity.AddClaims(new[] {new Claim(ClaimTypes.Name, c.UserName), new Claim(ClaimTypes.Role, "user")});
-
+						if (string.Equals(c.UserName, AppConfig.Manager, StringComparison.InvariantCultureIgnoreCase))
+							identity.AddClaims(new[] {new Claim(ClaimTypes.Name, c.UserName), new Claim(ClaimTypes.Role, "manager")});
 						c.Validated(identity);
 					}
 				},

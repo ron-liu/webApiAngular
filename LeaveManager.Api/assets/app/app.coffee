@@ -16,12 +16,12 @@ angular.module 'app', ['ui.router', 'ui.bootstrap', 'app.security', 'app.config'
 			$rootScope.notifications = NotificationManager
 			$rootScope.isSignedIn = AuthDataStorage.isSignedIn
 			$rootScope.signOut = AuthDataStorage.remove
+			$rootScope.goBack = ->$window.history.back()
+			$rootScope.moment = $window.moment
 		]
 
 	.state 'home.default',
 		url: ''
 		template: 'welcome'
 		controller: [-> console.log 'fdsa']
-
-
 ]

@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using LeaveManager.Api.Infrastructure;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LeaveManager.Api.Domain
 {
 	public class Leave : EventSourcedAggregate
 	{
-		public string UserName { get; set; }
+		public string Applicant { get; set; }
+		public string Evaluator { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ReasonEnum Reason { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
 		public StatusEnum Status { get; set; }
-		public List<CommentClass> Comments { get; set; }
+		public string ApplicantComment { get; set; }
+		public string EvaluatorComment { get; set; }
 		public DateTime AppliedOn { get; set; }
-		public DateTime EvaluatedOn { get; set; }
+		public DateTime? EvaluatedOn { get; set; }
 
 		public enum ReasonEnum
 		{
@@ -25,24 +31,13 @@ namespace LeaveManager.Api.Domain
 			New = 1, Applied, Approved, Rejected
 		}
 
-		public class CommentClass
-		{
-			public string UserName { get; set; }
-			public string Comment { get; set; }
-		}
-
 		public Leave()
-			: base(Guid.NewGuid())
-		{
-
-		}
+		{}
 
 		public Leave(Guid id)
 			: base(id)
 		{
 			Status = StatusEnum.New;
-			Comments = new List<CommentClass>();
-
 			Handles<LeaveApplied>(OnLeaveApplied);
 			Handles<LeaveEvaluated>(OnLeaveEvaluated);
 		}
@@ -83,9 +78,10 @@ namespace LeaveManager.Api.Domain
 
 		private void OnLeaveApplied(LeaveApplied e)
 		{
+			Applicant = e.UserName;
 			StartDate = e.StartDate;
 			EndDate = e.EndDate;
-			Comments.Add(new CommentClass { Comment = e.Comment, UserName = e.UserName });
+			ApplicantComment = e.Comment;
 			Reason = e.Reason;
 			AppliedOn = e.HappenedOn;
 			Status = StatusEnum.Applied;
@@ -94,7 +90,8 @@ namespace LeaveManager.Api.Domain
 		private void OnLeaveEvaluated(LeaveEvaluated e)
 		{
 			Status = e.IsApproved ? StatusEnum.Approved : StatusEnum.Rejected;
-			Comments.Add(new CommentClass { Comment = e.Comment, UserName = e.UserName });
+			Evaluator = e.UserName;
+			EvaluatorComment = e.Comment;
 			EvaluatedOn = e.HappenedOn;
 		}
 	}

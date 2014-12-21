@@ -33,6 +33,7 @@ namespace LeaveManager.Api
 
 		protected void Application_Error(object sender, EventArgs e)
 		{
+			if (AppConfig.Debug) return;
 			var exception = Server.GetLastError().GetBaseException();
 			var apiException = exception as ApiException;
 			var ret = new ApiModel();

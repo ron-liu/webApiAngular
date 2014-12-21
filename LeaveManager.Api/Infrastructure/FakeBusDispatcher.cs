@@ -20,9 +20,9 @@ namespace LeaveManager.Api.Infrastructure
 
 		public void Dispatch(ICommit commit)
 		{
-			foreach (var e in commit.Events.Cast<IEvent>())
+			foreach (var e in commit.Events.Select(x=>x.Body))
 			{
-				EventPublisher.Publish(e);
+				EventPublisher.Publish(e as IEvent);
 			}
 		}
 	}

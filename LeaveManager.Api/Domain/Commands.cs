@@ -12,6 +12,11 @@ namespace LeaveManager.Api.Domain
 		public Leave.ReasonEnum Reason { get; set; }
 		public string Comment { get; set; }
 		public DateTime HappenedOn { get; set; }
+
+		public ApplyLeaveCommand()
+		{
+			LeaveId = Guid.NewGuid();
+		}
 	}
 
 	public class EvaluateLeaveCommand : ICommand

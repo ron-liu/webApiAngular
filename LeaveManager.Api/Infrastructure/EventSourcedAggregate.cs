@@ -9,18 +9,20 @@ namespace LeaveManager.Api.Infrastructure
 		private readonly Dictionary<Type, Action<IEvent>> handlers = new Dictionary<Type, Action<IEvent>>();
 		private readonly List<IEvent> pendingEvents = new List<IEvent>();
 
-		private readonly Guid id;
+		//private readonly Guid id;
 		private int version = -1;
+
+		protected EventSourcedAggregate()
+		{
+			
+		}
 
 		protected EventSourcedAggregate(Guid id)
 		{
-			this.id = id;
+			this.Id = id;
 		}
 
-		public Guid Id
-		{
-			get { return this.id; }
-		}
+		public Guid Id { get; set; }
 
 		/// <summary>
 		/// Gets the entity's version. As the entity is being updated and events being generated, the version is incremented.

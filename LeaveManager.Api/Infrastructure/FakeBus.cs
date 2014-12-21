@@ -13,7 +13,7 @@ namespace LeaveManager.Api.Infrastructure
 	}
 
 	public interface IEventHandler {}
-	public interface IEventHandler<T> : IEventHandler where T : IEvent
+	public interface IEventHandler<in T> : IEventHandler where T : IEvent
 	{
 		void Handle(T @event);
 	}
@@ -50,11 +50,17 @@ namespace LeaveManager.Api.Infrastructure
 
 		public void Publish<T>(T @event) where T : IEvent
 		{
-			var handlers = Kernel.GetAll<IEventHandler<T>>().ToArray();
+			// At beginning, I try to use Kernel.Get<IEventHandler<T>>() to work out, but bad lucky, 
+			// have to play with reflection heavily
+			var handlers = Kernel.GetAll(typeof (IEventHandler<>).MakeGenericType(@event.GetType())).ToArray();
 			if (handlers == null) return;
-			
+
 			foreach (var h in handlers)
-				h.Handle(@event);
+			{
+				var method = h.GetType().GetMethod("Handle", new[] { @event.GetType() });
+				method.Invoke(h, new object[] {@event});
+			}
+				
 		}
 	}
 }

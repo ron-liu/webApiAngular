@@ -1,0 +1,66 @@
+<form >
+	<div class="columns">
+		<div class="form-group">
+			<label>Applicant</label>
+			<div>
+				<span ng-bind="leave.Applicant || '--'"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Applied on</label>
+			<div>
+				<span><div from-now ng-bind="leave.AppliedOn"></div></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Reason</label>
+			<div>
+				<span ng-bind="leave.Reason"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Start Date</label>
+			<div>
+				<span ng-bind="leave.StateDate | date:'dd/MM/yyyy'"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>End Date</label>
+			<div>
+				<span ng-bind="leave.EndDate | date:'dd/MM/yyyy'"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Status</label>
+			<div>
+				<span ng-bind="leave.Status"></span>
+			</div>
+		</div>
+	</div>
+	<div class="whole">
+		<div class="form-group">
+			<label>Applicant Comment</label>
+			<div>
+				<span ng-bind="leave.ApplicantComment"></span>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="leave.Status != 'Applied'">
+		<h3>Evaluation Result</h3>
+		<div class="whole">
+			<div class="form-group">
+				<label>Status</label>
+				<div>
+					<span ng-bind="leave.Status"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Evaluator Comment</label>
+				<div>
+					<span ng-bind="leave.EvaluatorComment"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

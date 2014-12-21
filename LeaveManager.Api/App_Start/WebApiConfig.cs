@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -32,9 +33,22 @@ namespace LeaveManager.Api
                 defaults: new { id = RouteParameter.Optional }
             );
 
-			config.Services.Replace(typeof(IExceptionHandler), new ApplicationExceptionHandler());
+			if (!AppConfig.Debug)
+				config.Services.Replace(typeof(IExceptionHandler), new ApplicationExceptionHandler());
         }
     }
+
+	public static class AppConfig
+	{
+		public static bool Debug { get; set; }
+		public static string Manager { get; set; }
+
+		static AppConfig()
+		{
+			Debug = ConfigurationManager.AppSettings["debug"].ToLower() == "true";
+			Manager = ConfigurationManager.AppSettings["manager"];
+		}
+	}
 
 	public class ApplicationExceptionHandler : ExceptionHandler
 	{

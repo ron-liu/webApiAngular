@@ -157,6 +157,10 @@
     <Compile Include="Domain\Events.cs" />
     <Compile Include="Domain\Leave.cs" />
     <Compile Include="Domain\LeaveCommandHandler.cs" />
+    <Compile Include="Domain\LeaveReadModelEventHandler.cs" />
+    <Compile Include="Domain\ReadModels.cs" />
+    <Compile Include="Infrastructure\Extentions.cs" />
+    <Compile Include="Infrastructure\ReadModelRepository.cs" />
     <Compile Include="Infrastructure\EventSourcedAggregate.cs" />
     <Compile Include="Infrastructure\EventSteamRepository.cs" />
     <Compile Include="Infrastructure\FakeBus.cs" />
@@ -167,6 +171,8 @@
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\IQuery.cs" />
+    <Compile Include="Query\LeaveById.cs" />
+    <Compile Include="Query\ListLeavesToEvaluate.cs" />
     <Compile Include="Query\ListLeavesByUserName.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

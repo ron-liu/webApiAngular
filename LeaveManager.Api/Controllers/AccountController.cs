@@ -48,15 +48,5 @@ namespace LeaveManager.Api.Controllers
 			CheckModelSate();
 			return BadRequest(); // No ModelState errors are available to send, so just return an empty BadRequest.
 		}
-
-		
-		//[Authorize]
-		[HttpGet]
-		public IHttpActionResult List()
-		{
-			//return Content(HttpStatusCode.OK, 
-			//	listLeavesByUserName.Query(new ListLeavesByUserNameCondition{UserName = User.Identity.Name}));
-			return null;
-		}
 	}
 }

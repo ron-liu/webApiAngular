@@ -54,14 +54,14 @@ angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config',
 		data = "grant_type=password&username=" + model.Email + "&password=" + model.Password;
 		Restangular.all('token').post data, {}, 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"
 		.then (res) ->
-			AuthDataStorage.set res.access_token
+			AuthDataStorage.set res.access_token, model.Email
 			ReturnUrlService.returnToUrl()
 
 	signUp: (model) ->
 		Restangular.all('sign-up').post model
 		.then (res) ->
 			NotificationManager.setMessages [MessageType:'Info', Content:'User has been successfully created, will redirect to sign in page soon']
-			$timeout (-> $state.go 'home.signIn'), 4000
+			$timeout (-> $state.go 'home.signIn'), 2000
 ]
 
 .factory 'AuthDataStorage', ['localStorageService', 'AppConfig', (localStorageService, AppConfig) ->
@@ -75,6 +75,7 @@ angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config',
 			localStorageService.add AppConfig.authDataKey, authData
 
 		getToken: => @_get()?.token
+		getUser: => @_get()?.userName
 
 		remove: => localStorageService.remove AppConfig.authDataKey
 

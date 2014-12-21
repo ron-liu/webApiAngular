@@ -5,19 +5,19 @@ using Ninject;
 
 namespace LeaveManager.Api.Query
 {
-	public class ListLeavesByUserName : IQuery
+	public class ListLeavesToEvaluate : IQuery
 	{
 		public string UserName { get; set; }
 	}
 
-	public class ListLeavesByUserNameQueryHandler : IQueryHandler<ListLeavesByUserName, IEnumerable<Leave>>
+	public class ListLeavesToEvaluateQueryHandler : IQueryHandler<ListLeavesToEvaluate, IEnumerable<Leave>>
 	{
 		[Inject]
 		public LeaveReadModelRepository LeaveReadModelRepository { get; set; }
-		
-		public IEnumerable<Leave> Query(ListLeavesByUserName passIn)
+
+		public IEnumerable<Leave> Query(ListLeavesToEvaluate input)
 		{
-			return LeaveReadModelRepository.GetLeavesByUserName(passIn.UserName);
+			return LeaveReadModelRepository.ListLeavesToEvaluate();
 		}
 	}
 }

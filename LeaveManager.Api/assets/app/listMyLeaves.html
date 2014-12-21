@@ -1,0 +1,25 @@
+<h1>All My Leaves</h1>
+<table class="table">
+	<thead>
+	<tr>
+		<th>Reason</th>
+		<th>Date</th>
+		<th>Duration</th>
+		<th>Status</th>
+		<th>Applied On</th>
+		<th>Action</th>
+	</tr>
+	</thead>
+	<tbody ng-repeat="l in leaves">
+	<tr>
+		<td ng-bind="l.Reason"></td>
+		<td ng-bind-template="{{l.StartDate | date:'dd/MM/yyyy'}} - {{l.EndDate | date:'dd/MM/yyyy'}}"></td>
+		<td ng-bind-template="{{l.DurationInDays}}d"></td>
+		<td ng-bind="l.Status"></td>
+		<td><div from-now ng-bind="l.AppliedOn"></div></td>
+		<td>
+			<a ui-sref="home.viewMyLeave({leaveId:l.Id})">View</a>
+		</td>
+	</tr>
+	</tbody>
+</table>
