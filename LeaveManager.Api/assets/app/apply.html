@@ -6,7 +6,7 @@
 			<div>
 				<input type="text" class="form-control" placeholder="Start date"
 				       datepicker-popup="{{'dd/MM/yyyy'}}" is-open="sopened" required ng-click="sopened = !sopened"
-				       ng-model="model.StartDate" name="startDate" />
+				       ng-model="model.StartDate" name="startDate" future-validator ng-change="getWorkingDays()" />
 				<div class="error-messages" ng-if="form.attempted" ng-messages="form.startDate.$error" ng-messages-include="form-messages"></div>
 			</div>
 		</div>
@@ -15,8 +15,14 @@
 			<div>
 				<input type="text" class="form-control" placeholder="End date"
 				       datepicker-popup="{{'dd/MM/yyyy'}}" is-open="eopened" required ng-click="eopened = !eopened"
-				       ng-model="model.EndDate" name="endDate" required gt-validator="model.StartDate"/>
+				       ng-model="model.EndDate" name="endDate" required gte-validator="model.StartDate" ng-change="getWorkingDays()"/>
 				<div class="error-messages" ng-if="form.attempted" ng-messages="form.endDate.$error" ng-messages-include="form-messages"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Duration In Days</label>
+			<div>
+				<span class="form-control" ng-bind="model.duration == null ? '--' : model.duration + ' days'"></span>
 			</div>
 		</div>
 		<div class="form-group">

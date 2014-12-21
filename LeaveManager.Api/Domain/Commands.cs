@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using LeaveManager.Api.Infrastructure;
 
 namespace LeaveManager.Api.Domain
 {
-	public class ApplyLeaveCommand : ICommand
+	public class ApplyLeaveCommand : ICommand, IValidatableObject
 	{
 		public Guid LeaveId { get; set; }
 		public string UserName { get; set; }
@@ -16,6 +18,11 @@ namespace LeaveManager.Api.Domain
 		public ApplyLeaveCommand()
 		{
 			LeaveId = Guid.NewGuid();
+		}
+
+		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+			if ((EndDate - StartDate).TotalDays > 100) yield return new ValidationResult("Cannot greater than 100 days");
 		}
 	}
 

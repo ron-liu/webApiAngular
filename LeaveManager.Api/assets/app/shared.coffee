@@ -20,12 +20,12 @@ angular.module 'app.shared', []
 			else scope.$apply  -> form.loading = false
 ]
 
-.directive 'gtValidator', ->
+.directive 'gteValidator', ->
 	require: 'ngModel'
 	link: (scope, element, attrs, ngModel) ->
 		ngModel.$validators.gt = (value) ->
 			compareTo = scope.$eval attrs.gtValidator
-			if compareTo then value > compareTo else true
+			if compareTo then value >= compareTo else true
 
 .directive 'ltValidator', ->
 	require: 'ngModel'
@@ -33,6 +33,19 @@ angular.module 'app.shared', []
 		ngModel.$validators.lt = (value) ->
 			compareTo = scope.$eval attrs.gtValidator
 			if compareTo then value < compareTo	else true
+
+.directive 'futureValidator', ->
+	require: 'ngModel'
+	link: (scope, element, attrs, ngModel) ->
+		ngModel.$validators.future = (value) ->
+			if value? then value.valueOf() > new Date().valueOf() else true
+
+.directive 'matchValidator', ->
+	require: 'ngModel',
+	link : (scope, element, attrs, ngModel) ->
+		ngModel.$parsers.push (value) ->
+			ngModel.$setValidity('match', value == scope.$eval(attrs.matchValidator));
+			return value
 
 .directive 'fromNow', ['$parse', '$compile', ($parse, $compile) ->
 	restrict: 'EA'

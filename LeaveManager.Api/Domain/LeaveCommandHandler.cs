@@ -9,12 +9,14 @@ namespace LeaveManager.Api.Domain
 {
 	public class LeaveCommandHandler : ICommandHandler<ApplyLeaveCommand>, ICommandHandler<EvaluateLeaveCommand>
 	{
-		[Inject] public IEventSteamRepository<Leave> repo { get; set; }
+		[Inject] private IEventSteamRepository<Leave> repo { get; set; }
+		[Inject] private IQueryHandler<GetWorkingDays, int> WorkingDays { get; set; }
 
 		public void Handle(ApplyLeaveCommand command)
 		{
 			var leave = new Leave(command.LeaveId);
-			leave.ApplyLeave(command.UserName, command.StartDate, command.EndDate, command.Reason, command.Comment);
+			var workingDays = WorkingDays.Query(new GetWorkingDays { StartDate = command.StartDate, EndDate = command.EndDate});
+			leave.ApplyLeave(command.UserName, command.StartDate, command.EndDate, workingDays, command.Reason, command.Comment);
 			repo.Save(leave);
 		}
 

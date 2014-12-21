@@ -14,7 +14,7 @@
 	<tr>
 		<td ng-bind="l.Reason"></td>
 		<td ng-bind-template="{{l.StartDate | date:'dd/MM/yyyy'}} - {{l.EndDate | date:'dd/MM/yyyy'}}"></td>
-		<td ng-bind-template="{{l.DurationInDays}}d"></td>
+		<td ng-bind-template="{{l.WorkingDays}} days"></td>
 		<td ng-bind="l.Status"></td>
 		<td><div from-now ng-bind="l.AppliedOn"></div></td>
 		<td>

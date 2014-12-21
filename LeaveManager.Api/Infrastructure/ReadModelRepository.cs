@@ -43,8 +43,8 @@ namespace LeaveManager.Api.Infrastructure
 					begin tran
 					delete LeaveReadModel where Id = @Id
 					insert into 
-					LeaveReadModel(Id, Applicant, Evaluator, StartDate, EndDate, ApplicantComment, EvaluatorComment, Reason, Status, AppliedOn, EvaluatedOn) 
-					values(@Id, @Applicant, @Evaluator, @StartDate, @EndDate, @ApplicantComment, @EvaluatorComment, @Reason, @Status, @AppliedOn, @EvaluatedOn) 
+					LeaveReadModel(Id, Applicant, Evaluator, StartDate, EndDate, ApplicantComment, EvaluatorComment, Reason, Status, AppliedOn, EvaluatedOn, WorkingDays) 
+					values(@Id, @Applicant, @Evaluator, @StartDate, @EndDate, @ApplicantComment, @EvaluatorComment, @Reason, @Status, @AppliedOn, @EvaluatedOn, @WorkingDays) 
 					commit tran
 				", leave);
 			}
@@ -91,7 +91,8 @@ namespace LeaveManager.Api.Infrastructure
 						AppliedOn datetime2,
 						EvaluatedOn datetime2,
 						ApplicantComment varchar(1024),
-						EvaluatorComment varchar(1024)
+						EvaluatorComment varchar(1024),
+						WorkingDays int
 					)
 					end
 				");
@@ -102,6 +103,14 @@ namespace LeaveManager.Api.Infrastructure
 			using (var conn = ReadModelDbContext.GetConnection())
 			{
 				return conn.Query<Leave>("select * from LeaveReadModel where Status = @Status order by AppliedOn desc", new {Status= Leave.StatusEnum.Applied} );
+			}
+		}
+
+		public IEnumerable<Leave> OverlappedLeaves(DateTime startDate, DateTime endDate)
+		{
+			using (var conn = ReadModelDbContext.GetConnection())
+			{
+				return conn.Query<Leave>("select * from LeaveReadModel where Status = @Status and @endDate >= StartDate and @startDate <= EndDate order by AppliedOn desc", new { Status = Leave.StatusEnum.Approved, startDate, endDate });
 			}
 		}
 	}

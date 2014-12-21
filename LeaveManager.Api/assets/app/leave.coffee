@@ -12,11 +12,23 @@ angular.module 'app.leave', ['ui.router', 'ui.bootstrap', 'app.shared', 'app.sec
 		templateUrl: 'app/apply.html'
 		controller: ['options','$scope','LeaveService', '$state', 'NotificationManager', '$timeout', (options, $scope, LeaveService, $state, NotificationManager, $timeout)->
 			$scope.options = options
+			$scope.model = {}
 			$scope.submit = (model) ->
 				LeaveService.apply model
 				.then ->
 					NotificationManager.setMessages [MessageType: 'Info', Content: 'Submit successfully, redirecting to list page.']
 					$timeout (-> $state.go 'home.list'), 2000
+
+
+			getWorkingDays =  (start, end)->
+				if not start? or not end? then return
+				LeaveService.getWorkingDays start, end
+				.then (res) ->
+					$scope.model.duration = res
+
+			$scope.$watch 'model.StartDate', (newVal, oldVal) -> getWorkingDays newVal, $scope.model.EndDate
+			$scope.$watch 'model.EndDate', (newVal) -> getWorkingDays $scope.model.StartDate, newVal
+
 		]
 		resolve:
 			options : ['LeaveService', (LeaveService) -> LeaveService.options()]
@@ -70,6 +82,7 @@ angular.module 'app.leave', ['ui.router', 'ui.bootstrap', 'app.shared', 'app.sec
 	getById: (leaveId) -> Restangular.one('leave', leaveId).get()
 	getMineById: (leaveId) -> Restangular.one('my-leave', leaveId).get()
 	evaluate: (model) -> Restangular.all('evaluate').post _.extend model
+	getWorkingDays: (start, end) -> Restangular.all('working-days').post StartDate: start, EndDate: end
 
 	options: ->Restangular.one('options').get()
 ]

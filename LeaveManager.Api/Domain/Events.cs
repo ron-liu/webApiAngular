@@ -5,6 +5,7 @@ namespace LeaveManager.Api.Domain
 {
 	public class LeaveApplied : IEvent
 	{
+		public int WorkingDays { get; set; }
 		public string UserName { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }

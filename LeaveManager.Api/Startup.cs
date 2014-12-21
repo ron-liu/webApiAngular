@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Web.Http;
 using LeaveManager.Api.Domain;
 using LeaveManager.Api.Infrastructure;
-using LeaveManager.Api.Query;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using NEventStore;
@@ -54,10 +53,12 @@ namespace LeaveManager.Api
 			// But here, I just want to do it explicitly
 			kernel.Bind<ICommandHandler<ApplyLeaveCommand>, ICommandHandler<EvaluateLeaveCommand>>().To<LeaveCommandHandler>();
 			kernel.Bind<IEventHandler<LeaveApplied>, IEventHandler<LeaveEvaluated>>().To<LeaveReadModelEventHandler>();
-			kernel.Bind<IQueryHandler<ListLeavesByUserName, IEnumerable<Leave>>>().To<ListLeavesByUserNameQueryHandler>();
-			kernel.Bind<IQueryHandler<ListLeavesToEvaluate, IEnumerable<Leave>>>().To<ListLeavesToEvaluateQueryHandler>();
-			kernel.Bind<IQueryHandler<LeaveById, Leave>>().To<LeaveByIdQueryHandler>();
+			kernel.Bind<IQueryHandler<ListLeavesByUserName, IEnumerable<Leave>>>().To<ListLeavesByUserName.Handler>();
+			kernel.Bind<IQueryHandler<ListLeavesToEvaluate, IEnumerable<Leave>>>().To<ListLeavesToEvaluate.Handler>();
+			kernel.Bind<IQueryHandler<LeaveById, Leave>>().To<LeaveById.Handler>();
 			kernel.Bind<IQueryHandler<MyLeaveById, Leave>>().To<MyLeaveById.Handler>();
+			kernel.Bind<IQueryHandler<GetWorkingDays, int>>().To<GetWorkingDays.Handler>();
+			kernel.Bind<IQueryHandler<OverlapWithApprovedLeaves, OverlapWithApprovedLeaves.OverlapCheckResult>>().To<OverlapWithApprovedLeaves.Handler>();
 
 			kernel.Get<LeaveReadModelRepository>().Init();
 

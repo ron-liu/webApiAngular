@@ -20,6 +20,7 @@ namespace LeaveManager.Api.Domain
 		public string EvaluatorComment { get; set; }
 		public DateTime AppliedOn { get; set; }
 		public DateTime? EvaluatedOn { get; set; }
+		public int WorkingDays { get; set; }
 
 		public enum ReasonEnum
 		{
@@ -48,18 +49,19 @@ namespace LeaveManager.Api.Domain
 			LoadFrom(pastEvents);
 		}
 
-		public void ApplyLeave(string userName, DateTime startDate, DateTime endDate, ReasonEnum reason, string comment, DateTime? asAt = null)
+		public void ApplyLeave(string userName, DateTime startDate, DateTime endDate, int workingDays, ReasonEnum reason, string comment, DateTime? asAt = null)
 		{
 			asAt = asAt ?? DateTime.Now;
 			Update(new LeaveApplied
 			{
+				WorkingDays = workingDays,
 				UserName = userName,
 				Comment = comment,
 				StartDate = startDate,
 				EndDate = endDate,
 				Reason = reason,
 				SourceId = Id,
-				HappenedOn = asAt.Value
+				HappenedOn = asAt.Value,
 			});
 		}
 
@@ -85,6 +87,7 @@ namespace LeaveManager.Api.Domain
 			Reason = e.Reason;
 			AppliedOn = e.HappenedOn;
 			Status = StatusEnum.Applied;
+			WorkingDays = e.WorkingDays;
 		}
 
 		private void OnLeaveEvaluated(LeaveEvaluated e)

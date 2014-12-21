@@ -15,7 +15,7 @@
 		<td ng-bind="l.Applicant"></td>
 		<td ng-bind="l.Reason"></td>
 		<td ng-bind-template="{{l.StartDate | date:'dd/MM/yyyy'}} - {{l.EndDate | date:'dd/MM/yyyy'}}"></td>
-		<td ng-bind-template="{{l.DurationInDays}}d"></td>
+		<td ng-bind-template="{{l.WorkingDays}} days"></td>
 		<td><div from-now ng-bind="l.AppliedOn"></div></td>
 		<td>
 			<a ui-sref="home.evaluate({leaveId: l.Id})">Evaluate</a>

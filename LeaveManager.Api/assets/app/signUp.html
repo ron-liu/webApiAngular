@@ -12,7 +12,7 @@
 			<div class="error-messages" ng-if="form.attempted" ng-messages="form.password.$error" ng-messages-include="form-messages"></div>
 		</div>
 		<div class="form-group">
-			<input type="password" class="form-control" placeholder="Confirm Password" ng-model="model.ConfirmPassword" name="confirmPassword" required/>
+			<input type="password" class="form-control" placeholder="Confirm Password" ng-model="model.ConfirmPassword" name="confirmPassword" match-validator="model.Password" required/>
 			<div class="error-messages" ng-if="form.attempted" ng-messages="form.confirmPassword.$error" ng-messages-include="form-messages"></div>
 		</div>
 		<div class="form-group">
