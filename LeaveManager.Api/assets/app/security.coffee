@@ -1,4 +1,4 @@
-angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config', 'restangular', 'app.shared', 'ngMessages']
+angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config', 'restangular', 'app.shared', 'ngMessages', 'app.notification']
 
 .config ['$httpProvider', ($httpProvider) -> $httpProvider.interceptors.push 'httpAuthInterceptors']
 
@@ -25,7 +25,7 @@ angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config',
 		]
 ]
 
-.factory 'httpAuthInterceptors', ['ReturnUrlService', '$q', 'AppConfig', 'AuthDataStorage', (ReturnUrlService, $q, AppConfig, AuthDataStorage) ->
+.factory 'httpAuthInterceptors', ['ReturnUrlService', '$q', 'AppConfig', 'AuthDataStorage', 'NotificationManager', (ReturnUrlService, $q, AppConfig, AuthDataStorage, NotificationManager) ->
 	request: (config) ->
 		if config.url.indexOf(AppConfig.baseApiUrl) >=0
 			config.headers['Authorization'] = "Bearer #{AuthDataStorage.getToken()}"
@@ -33,6 +33,7 @@ angular.module 'app.security', ['ui.router', 'LocalStorageModule', 'app.config',
 	responseError: (rejection) ->
 		switch rejection.status
 			when 401, 403
+				NotificationManager.setMessages [MessageType: 'Error', Content: "Unauthorized, it may because you didn't sign in, session expired or you are not allowed."]
 				ReturnUrlService.relocateSignIn()
 		$q.reject rejection
 ]

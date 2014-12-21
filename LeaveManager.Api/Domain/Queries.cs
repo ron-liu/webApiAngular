@@ -142,4 +142,56 @@ namespace LeaveManager.Api.Domain
 		}
 	}
 
+	public class GetThisFinacialStartDate : IQuery
+	{
+		public DateTime? AsAt { get; set; }
+
+		public class Handler : IQueryHandler<GetThisFinacialStartDate, DateTime>
+		{
+			public DateTime Query(GetThisFinacialStartDate input)
+			{
+				var asAt = input.AsAt ?? DateTime.Now;
+				return asAt.Month >= 7 ? new DateTime(asAt.Year, 7, 1) : new DateTime(asAt.Year - 1, 7, 1);
+			}
+		}
+	}
+
+	public class AprovedLeavesGroupByReason : IQuery
+	{
+		public class Handler : IQueryHandler<AprovedLeavesGroupByReason, IEnumerable<ReasonItem>>
+		{
+			[Inject] public LeaveReadModelRepository LeaveReadModelRepository { get; set; }
+			[Inject] public IQueryHandler<GetThisFinacialStartDate, DateTime> GetThisFinacialStartDate { get; set; }
+
+			public IEnumerable<ReasonItem> Query(AprovedLeavesGroupByReason input)
+			{
+				var items = LeaveReadModelRepository.ApprovedLeavesGroupByReason(GetThisFinacialStartDate.Query(new GetThisFinacialStartDate())).ToList();
+				foreach (var e in Enum.GetValues(typeof(Leave.ReasonEnum)).Cast<Leave.ReasonEnum>())
+				{
+					if (!items.Any(x=>x.Reason == e)) items.Add(new ReasonItem{Reason = e, Count = 0});
+				}
+				return items;
+			}
+		}
+	}
+
+	public class LeavesGroupByStatus: IQuery
+	{
+		public class Handler : IQueryHandler<LeavesGroupByStatus, IEnumerable<StatusItem>>
+		{
+			[Inject] public LeaveReadModelRepository LeaveReadModelRepository { get; set; }
+			[Inject] public IQueryHandler<GetThisFinacialStartDate, DateTime> GetThisFinacialStartDate { get; set; }
+
+			public IEnumerable<StatusItem> Query(LeavesGroupByStatus input)
+			{
+				var items = LeaveReadModelRepository.LeavesGroupByStatus(GetThisFinacialStartDate.Query(new GetThisFinacialStartDate())).ToList();
+				foreach (var e in Enum.GetValues(typeof(Leave.StatusEnum)).Cast<Leave.StatusEnum>())
+				{
+					if (!items.Any(x => x.Status == e)) items.Add(new StatusItem { Status = e, Count = 0 });
+				}
+				return items;
+			}
+		}
+	}
+
 }

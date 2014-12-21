@@ -5,7 +5,11 @@ angular.module 'app.leave', ['ui.router', 'ui.bootstrap', 'app.shared', 'app.sec
 	.state 'home.dashboard',
 		url: 'dashboard'
 		templateUrl: 'app/dashboard.html'
-		controller: [->]
+		controller: ['$scope', 'stat', ($scope, stat)->
+			$scope.stat = stat
+		]
+		resolve:
+			stat: ['LeaveService', (LeaveService) -> LeaveService.stat()]
 
 	.state 'home.apply',
 		url: 'apply'
@@ -83,6 +87,7 @@ angular.module 'app.leave', ['ui.router', 'ui.bootstrap', 'app.shared', 'app.sec
 	getMineById: (leaveId) -> Restangular.one('my-leave', leaveId).get()
 	evaluate: (model) -> Restangular.all('evaluate').post _.extend model
 	getWorkingDays: (start, end) -> Restangular.all('working-days').post StartDate: start, EndDate: end
+	stat : -> Restangular.one('stat').get()
 
 	options: ->Restangular.one('options').get()
 ]

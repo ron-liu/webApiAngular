@@ -22,6 +22,5 @@ angular.module 'app', ['ui.router', 'ui.bootstrap', 'app.security', 'app.config'
 
 	.state 'home.default',
 		url: ''
-		template: 'welcome'
-		controller: [-> console.log 'fdsa']
+		onEnter: ['$state', ($state) -> $state.go 'home.dashboard']
 ]

@@ -19,6 +19,10 @@ namespace LeaveManager.Api.Controllers
 		[Inject] private IQueryHandler<MyLeaveById, Leave> MyLeaveById { get; set; }
 		[Inject] private IQueryHandler<GetWorkingDays, int> WorkingDays { get; set; }
 		[Inject] private IQueryHandler<OverlapWithApprovedLeaves, OverlapWithApprovedLeaves.OverlapCheckResult> OverlapWithApprovedLeaves { get; set; }
+		[Inject] private IQueryHandler<GetThisFinacialStartDate, DateTime> GetThisFinacial { get; set; }
+		[Inject] private IQueryHandler<AprovedLeavesGroupByReason, IEnumerable<ReasonItem>> ApprovedLeavesGroupByReason { get; set; }
+		[Inject] private IQueryHandler<LeavesGroupByStatus, IEnumerable<StatusItem>> LeavesGroupByStatus { get; set; }
+
 		[Inject] private ICommandSender CommandSender { get; set; }
 
 		[Route("apply")]
@@ -98,6 +102,19 @@ namespace LeaveManager.Api.Controllers
 		{
 			return Content(HttpStatusCode.OK,
 				WorkingDays.Query(new GetWorkingDays {StartDate = model.StartDate, EndDate = model.EndDate}));
+		}
+
+		[HttpGet]
+		[Authorize]
+		[Route("stat")]
+		public IHttpActionResult Stat()
+		{
+			return Content(HttpStatusCode.OK, new
+			{
+				ReasonStat = ApprovedLeavesGroupByReason.Query(new AprovedLeavesGroupByReason()),
+				StatusStat = LeavesGroupByStatus.Query(new LeavesGroupByStatus()),
+				Since = GetThisFinacial.Query(new GetThisFinacialStartDate() )
+			});
 		}
 	}
 }

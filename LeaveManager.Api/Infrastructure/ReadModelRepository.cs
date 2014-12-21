@@ -7,8 +7,12 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using CommonDomain.Persistence.EventStore;
 using LeaveManager.Api.Domain;
+using LeaveManager.Api.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ninject;
 using Dapper;
 
@@ -113,5 +117,38 @@ namespace LeaveManager.Api.Infrastructure
 				return conn.Query<Leave>("select * from LeaveReadModel where Status = @Status and @endDate >= StartDate and @startDate <= EndDate order by AppliedOn desc", new { Status = Leave.StatusEnum.Approved, startDate, endDate });
 			}
 		}
+
+		public IEnumerable<ReasonItem> ApprovedLeavesGroupByReason(DateTime since)
+		{
+			using (var conn = ReadModelDbContext.GetConnection())
+			{
+				return conn.Query<ReasonItem>("select Reason, count(1) as Count from LeaveReadModel where Status = @Status and StartDate>@since group by Reason", new { Status = Leave.StatusEnum.Approved, since });
+			}
+		}
+
+		
+
+		public IEnumerable<StatusItem> LeavesGroupByStatus(DateTime since)
+		{
+			using (var conn = ReadModelDbContext.GetConnection())
+			{
+				return conn.Query<StatusItem>("select Status, count(1) as Count from LeaveReadModel where StartDate>@since group by Status", new { Status = Leave.StatusEnum.Approved, since });
+			}
+		}
+
+		
+
+	}
+	public class StatusItem
+	{
+		[JsonConverter(typeof(StringEnumConverter))]
+		public Leave.StatusEnum Status { get; set; }
+		public int Count { get; set; }
+	}
+	public class ReasonItem
+	{
+		[JsonConverter(typeof(StringEnumConverter))]
+		public Leave.ReasonEnum Reason { get; set; }
+		public int Count { get; set; }
 	}
 }

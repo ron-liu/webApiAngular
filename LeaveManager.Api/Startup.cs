@@ -59,6 +59,9 @@ namespace LeaveManager.Api
 			kernel.Bind<IQueryHandler<MyLeaveById, Leave>>().To<MyLeaveById.Handler>();
 			kernel.Bind<IQueryHandler<GetWorkingDays, int>>().To<GetWorkingDays.Handler>();
 			kernel.Bind<IQueryHandler<OverlapWithApprovedLeaves, OverlapWithApprovedLeaves.OverlapCheckResult>>().To<OverlapWithApprovedLeaves.Handler>();
+			kernel.Bind<IQueryHandler<GetThisFinacialStartDate, DateTime>>().To<GetThisFinacialStartDate.Handler>();
+			kernel.Bind<IQueryHandler<AprovedLeavesGroupByReason, IEnumerable<ReasonItem>>>().To<AprovedLeavesGroupByReason.Handler>();
+			kernel.Bind<IQueryHandler<LeavesGroupByStatus, IEnumerable<StatusItem>>>().To<LeavesGroupByStatus.Handler>();
 
 			kernel.Get<LeaveReadModelRepository>().Init();
 

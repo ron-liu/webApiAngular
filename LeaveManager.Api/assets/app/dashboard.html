@@ -1,1 +1,38 @@
-dashboard
+<div class="row">
+	<div class="col-sm-6">
+		<h3>Approved leaves by reasons since {{stat.Since | date: 'dd/MM/yyyy'}}</h3>
+		<table class="table col-sm-6">
+			<thead>
+			<tr>
+				<th>Reason</th>
+				<th>Count</th>
+			</tr>
+			</thead>
+			<tbody ng-repeat="r in stat.ReasonStat">
+			<tr>
+				<td ng-bind="r.Reason"></td>
+				<td ng-bind="r.Count"></td>
+			</tr>
+			</tbody>
+
+		</table>
+	</div>
+	<div class="col-sm-6">
+		<h3>All leaves by Status  since {{stat.Since | date: 'dd/MM/yyyy'}}</h3>
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Status</th>
+				<th>Count</th>
+			</tr>
+			</thead>
+			<tbody ng-repeat="r in stat.StatusStat">
+			<tr>
+				<td ng-bind="r.Status"></td>
+				<td ng-bind="r.Count"></td>
+			</tr>
+			</tbody>
+
+		</table>
+	</div>
+</div>
