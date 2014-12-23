@@ -13,7 +13,7 @@ To write a proof-of-concept to allow employees of a company to apply for leave t
 CQRS + Event Store + WebApi + Angular
 
 ## What is the detailed tech stacks?
-* **Bearer token** by using Asp.net owin identity: I always think it is the pure way to do with angular, and another benefits are the whole api can serve mobile api without any changes;
+* **Bearer token** by using Asp.net owin identity: I always think it is the pure way to do with angular, and another benefits is the whole api can serve mobile api without any changes;
 * **Ioc** by using Ninject
 * **CQRS**: totally separated the write and read side, be able to use other database for read-side like mongo, elastic search;  
 * **Event store** by using NEventStore: I like event sourcing concept, which means like the source of truth is the transaction logs instead of final states, and event listener can help put into suitable databases for read.
@@ -36,6 +36,14 @@ CQRS + Event Store + WebApi + Angular
     * bower install
     * grunt
 * Build the c# code, and visit http://localhost:{port}/assets/index.html. 
+
+## Source code structure
+* webApiAngular.API
+  * App_Start: route settings, centrelised api exception, app config, etc
+  * Controller: 
+  * Domain: domain modals, event handlers, command handlers, queries
+  * Infrastructure: FakeBus, FakeBus dispacher(used for event store), abstract aggregate class, event streem repository, read model repository, 
+  * assets: all the angular app, scss, etc
 
 ## Requirements comments:
 * Main features:
